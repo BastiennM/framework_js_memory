@@ -5,6 +5,7 @@ import {onBeforeMount, onMounted, reactive, ref, watch} from "vue";
 import {GameMethods} from "@/methods/GameMethods";
 import {CardsMethod, initialCards} from "@/methods/CardsMethod";
 import {CardModel} from "@/models/CardModel";
+import Modal from "@/components/Modal.vue";
 
 const generatedCards = CardsMethod.generatePairs(initialCards);
 const shuffledCards = CardsMethod.shuffleCard(generatedCards);
@@ -51,7 +52,7 @@ function getCardShowedWithoutFindedOne() {
 
 function onCardClick(index: number) {
   currentGame.listCard[index].isShowed = !currentGame.listCard[index].isShowed
-  currentGame.numberPlay++;
+  if(getCardShowedWithoutFindedOne().length === 2) currentGame.numberPlay++
 }
 </script>
 
@@ -63,5 +64,20 @@ function onCardClick(index: number) {
         </div>
       </template>
     </div>
-  couycu
+  <div class="d-flex flex-column justify-content-between h-50">
+    <div>
+      <div v-if="currentGame.numberPairFinded !== initialCards.length" class="alert alert-primary mt-4 " role="alert">
+        Nombre de coups joués : {{ currentGame.numberPlay }}
+      </div>
+      <div v-if="currentGame.numberPairFinded !== initialCards.length" class="alert alert-secondary" role="alert">
+        Nombre de paires trouvées : {{ currentGame.numberPairFinded }}
+      </div>
+      <div v-if="currentGame.numberPairFinded == initialCards.length" class="alert alert-success mt-4" role="alert">
+        Bravo, vous avez trouvé toutes les paires en {{ currentGame.numberPlay }} coups !
+      </div>
+    </div>
+    <div class="mb-5 align-content-center">
+      <Modal></Modal>
+    </div>
+  </div>
 </template>
